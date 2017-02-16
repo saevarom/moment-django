@@ -1,7 +1,7 @@
 ![Travis build status](https://travis-ci.org/saevarom/moment-django.svg?branch=master)
 
 # moment-django
-moment-django allows Moment.js to parse Django date formatting strings
+moment-django allows Moment.js to format dates using Django date formatting strings.
 
 Inspired heavily by
 * [moment-strftime](https://github.com/benjaminoakes/moment-strftime)
