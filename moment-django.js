@@ -68,7 +68,6 @@
     // Month without leading zeros.
     n: '',
     // Month abbreviation in Associated Press style. Proprietary extension.
-    // NOTE: simplifying this to just 3 letter month names with a period.
     N: function(_m) {
       if ([2, 3, 4, 5, 6].indexOf(_m.month()) > -1)
         return 'MMMM'
