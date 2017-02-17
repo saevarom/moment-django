@@ -64,7 +64,7 @@
     // Month, 2 digits with leading zeros.
     m: '',
     // Month, textual, 3 letters.
-    M: '',
+    M: 'MMM',
     // Month without leading zeros.
     n: '',
     // Month abbreviation in Associated Press style. Proprietary extension.

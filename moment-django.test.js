@@ -121,12 +121,23 @@ test('formats time, in 12-hour hours and minutes, with minutes left off if theyâ
 // test('formats ', () => {
 //   expect(date1.django('m')).toEqual('');
 // });
-//
-// // M
-// test('formats ', () => {
-//   expect(date1.django('M')).toEqual('');
-// });
-//
+
+// M
+test('formats month, textual, 3 letters', () => {
+  expect(dateJan.django('M')).toEqual('Jan');
+  expect(dateFeb.django('M')).toEqual('Feb');
+  expect(dateMar.django('M')).toEqual('Mar');
+  expect(dateApr.django('M')).toEqual('Apr');
+  expect(dateMay.django('M')).toEqual('May');
+  expect(dateJun.django('M')).toEqual('Jun');
+  expect(dateJul.django('M')).toEqual('Jul');
+  expect(dateAug.django('M')).toEqual('Aug');
+  expect(dateSep.django('M')).toEqual('Sep');
+  expect(dateOct.django('M')).toEqual('Oct');
+  expect(dateNov.django('M')).toEqual('Nov');
+  expect(dateDec.django('M')).toEqual('Dec');
+});
+
 // // n
 // test('formats ', () => {
 //   expect(date1.django('n')).toEqual('');
