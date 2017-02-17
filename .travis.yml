@@ -6,4 +6,4 @@ node_js:
   - '4'
 script: 'npm test'
 after_success:
-  - coveralls
+  - 'npm run coverage && cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js'

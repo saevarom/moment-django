@@ -5,7 +5,8 @@
   "main": "moment-django.js",
   "scripts": {
     "test": "jest",
-    "watch:test": "nodemon -w . -e js,jsx -x npm test"
+    "watch:test": "nodemon -w . -e js,jsx -x npm test",
+    "coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
