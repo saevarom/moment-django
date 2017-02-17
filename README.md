@@ -1,4 +1,4 @@
-![Travis build status](https://travis-ci.org/saevarom/moment-django.svg?branch=master)
+![Travis build status](https://travis-ci.org/saevarom/moment-django.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/saevarom/moment-django/badge.svg?branch=master)](https://coveralls.io/github/saevarom/moment-django?branch=master)
 
 # moment-django
 moment-django allows Moment.js to format dates using Django date formatting strings.
