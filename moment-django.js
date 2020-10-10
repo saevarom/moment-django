@@ -1,5 +1,5 @@
 (function () {
-  var moment, replacements;
+  var moment, replacements, callables;
 
   if (typeof require !== "undefined" && require !== null) {
     moment = require('moment');
@@ -7,12 +7,56 @@
     moment = this.moment;
   }
 
+  var a = (_m) => {
+    return (_m.hour() > 12) ? '[p.m.]' : '[a.m.]';
+  }
+
+  var f = (_m) => {
+    if (_m.minutes() == 0)
+      return 'h'
+    else
+      return 'h:mm'
+  }
+
+  var P = (_m) => {
+    var minutes = _m.minutes()
+    var hours = _m.hours()
+    if (minutes === 0 && hours === 0) {
+      return "[midnight]"
+    } 
+    if (minutes === 0 && hours === 12) {
+      return "[noon]"
+    }
+    return `${f(_m)} ${a(_m)}`
+
+  }
+
+  var N = (_m) => {
+    if ([2, 3, 4, 5, 6].indexOf(_m.month()) > -1)
+      return 'MMMM'
+    else
+      return 'MMM[.]'
+  }
+
+  var S = (_m) => {
+    var day = _m.day()
+    if ([11, 12, 13].includes(day)) {
+      return '[th]'
+    }
+    var last = day % 10
+    if (last === 1)
+        return '[st]'
+    if (last === 2)
+        return '[nd]'
+    if (last === 3)
+        return '[rd]'
+    return '[th]'
+  }
+
   replacements = {
     // 	'a.m.' or 'p.m.' (Note that this is slightly different than PHP’s
     // output, because this includes periods to match Associated Press style.)
-    a: function(_m) {
-      return (_m.hour() > 12) ? '[p.m.]' : '[a.m.]';
-    },
+    a: a,
     // 'AM' or 'PM'.
     A: 'A',
     // Month, textual, 3 letters, lowercase.
@@ -35,12 +79,7 @@
     E: 'MMMM',
     // Time, in 12-hour hours and minutes, with minutes left off if they’re
     // zero. Proprietary extension.
-    f: function(_m) {
-      if (_m.minutes() == 0)
-        return 'h'
-      else
-        return 'h:mm'
-    },
+    f: f,
     // Month, textual, long.
     F: 'MMMM',
     // Hour, 12-hour format without leading zeros.
@@ -53,48 +92,33 @@
     H: 'HH',
     // Minutes
     i: 'mm',
-    // Daylight Savings Time, whether it’s in effect or not.
-    I: '',
     // Day of the month without leading zeros.
     j: 'D',
     // Day of the week, textual, long.
-    l: '',
-    // Boolean for whether it’s a leap year.
-    L: '',
+    l: 'dddd',
     // Month, 2 digits with leading zeros.
-    m: '',
+    m: 'MM',
     // Month, textual, 3 letters.
     M: 'MMM',
     // Month without leading zeros.
-    n: '',
+    n: 'M',
     // Month abbreviation in Associated Press style. Proprietary extension.
-    N: function(_m) {
-      if ([2, 3, 4, 5, 6].indexOf(_m.month()) > -1)
-        return 'MMMM'
-      else
-        return 'MMM[.]'
-    },
+    N: N,
     // ISO-8601 week-numbering year, corresponding to the ISO-8601 week number
     // (W) which uses leap weeks. See Y for the more common year format.
-    o: '',
+    o: 'Y',
     // Difference to Greenwich time in hours.
-    O: '',
+    O: 'ZZ',
     // Time, in 12-hour hours, minutes and ‘a.m.’/’p.m.’, with minutes left off
     // if they’re zero and the special-case strings ‘midnight’ and ‘noon’ if
     // appropriate. Proprietary extension
-    P: function(_m) {
-      return '';
-    },
+    P: P,
     // RFC 5322 formatted date (https://tools.ietf.org/html/rfc5322.html).
-    r: '',
+    r: 'ddd[,] D MMM YYYY HH[:]mm:ss ZZ',
     // Seconds, 2 digits with leading zeros.
     s: 'ss',
     // English ordinal suffix for day of the month, 2 characters.
-    S: '',
-    // Number of days in the given month.
-    t: '',
-    // Time zone of this machine.
-    T: '',
+    S: S,
     // Microseconds.
     u: 'SSSSSS',
     // Seconds since the Unix Epoch (January 1 1970 00:00:00 UTC).
@@ -108,16 +132,39 @@
     // Year, 4 digits.
     Y: 'YYYY',
     // Day of the year.
-    z: '',
+    z: 'DDD',
     // Time zone offset in seconds. The offset for timezones west of UTC is
     // always negative, and for those east of UTC is always positive.
     Z: '',
 
   };
 
+  callables = {
+    // Daylight Savings Time, whether it’s in effect or not.
+    I: function(_m) {
+      return _m.isDST() ? '1' : '0'
+    },
+    // Boolean for whether it’s a leap year.
+    L: function(_m) {
+      return _m.isLeapYear()
+    },
+    // Time zone of this machine.
+    T: function(_m) {
+      return ""
+    },
+    // Number of days in the given month.
+    t: function(_m) {
+      return `${_m.daysInMonth()}`
+    },
+  }
+
   moment.fn.django = function (format) {
     var momentFormat = format, value, _m = this;
     momentFormat = format.replace(/(\w+)/g, function (literal) { return '[' + literal + ']'; });
+
+    if (Object.keys(callables).includes(format)) {
+      return callables[format](this)
+    }
 
     Object.keys(replacements).forEach(function (key) {
       if (replacements[key] instanceof Function) {
