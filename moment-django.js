@@ -19,18 +19,6 @@ if (!String.prototype.includes) {
     moment = this.moment;
   }
 
-  if (!String.prototype.includes) {
-    String.prototype.includes = function(search, start) {
-      'use strict';
-  
-      if (search instanceof RegExp) {
-        throw TypeError('first argument must not be a RegExp');
-      } 
-      if (start === undefined) { start = 0; }
-      return this.indexOf(search, start) !== -1;
-    };
-  }
-
   var a = (_m) => {
     return (_m.hour() > 12) ? '[p.m.]' : '[a.m.]';
   }
